@@ -12,6 +12,7 @@ export async function updateSession(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
+
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => {
             request.cookies.set(name, value);
@@ -27,8 +28,7 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  // 서버에서 사용자 인증 상태를 검증하고
-  // 필요한 경우 세션 쿠키를 갱신합니다.
+  // Supabase 인증 상태를 확인하고 필요한 경우 세션 쿠키를 갱신합니다.
   await supabase.auth.getClaims();
 
   return response;

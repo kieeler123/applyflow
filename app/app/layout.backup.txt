@@ -1,0 +1,26 @@
+import { connection } from "next/server";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+
+export default async function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  // 이 레이아웃의 인증 검사는 실제 요청 시점에 실행합니다.
+  await connection();
+
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  // 로그인하지 않은 사용자는 로그인 페이지로 이동합니다.
+  if (error || !user) {
+    redirect("/login");
+  }
+
+  return <>{children}</>;
+}
